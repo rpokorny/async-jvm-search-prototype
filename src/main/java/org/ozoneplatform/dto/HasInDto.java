@@ -1,3 +1,7 @@
 package org.ozoneplatform.dto;
 
-public interface HasInDto {}
+import javax.ws.rs.core.MediaType;
+
+public interface HasInDto {
+    MediaType getDefaultInContentType();
+}

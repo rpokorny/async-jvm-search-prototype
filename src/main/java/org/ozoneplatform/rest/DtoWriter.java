@@ -6,6 +6,8 @@ import java.lang.annotation.Annotation;
 import java.io.OutputStream;
 import java.io.IOException;
 
+import javax.ws.rs.Produces;
+
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;

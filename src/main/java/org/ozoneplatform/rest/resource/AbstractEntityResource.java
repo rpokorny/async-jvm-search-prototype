@@ -16,10 +16,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.ozoneplatform.service.AbstractService;
+import org.ozoneplatform.service.AbstractEntityService;
 import org.ozoneplatform.entity.Entity;
+import org.ozoneplatform.entity.Id;
 import org.ozoneplatform.dto.OutDtoFactory;
 import org.ozoneplatform.dto.OutDto;
 import org.ozoneplatform.dto.InDto;
@@ -28,14 +27,16 @@ import org.ozoneplatform.dto.InDto;
  * Parent class of jaxrs rest controllers, containing
  * basic CRUD functionality
  */
-public abstract class AbstractResource<T extends Entity> {
+public abstract class AbstractEntityResource<T extends Entity> {
 
-    @Autowired protected AbstractService<T> service;
+    protected AbstractEntityService<T> service;
 
     @POST
-    Response create(T entity) {
+    public Response create(T entity) {
+System.err.println("creating");
         T created = service.create(entity);
-        URI uri = UriBuilder.fromResource(this.getClass()).path(Long.toString(created.getId())).build();
+        URI uri = UriBuilder.fromResource(this.getClass()).path(created.getId().toString())
+            .build();
         return Response.created(uri).entity(created).build();
     }
 
@@ -44,26 +45,31 @@ public abstract class AbstractResource<T extends Entity> {
      * with paging parameters to limit the size of the return
      */
     @GET
-    Collection<T> readAll(@QueryParam("offset") Integer offset,
+    public Collection<T> readAll(@QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
+System.err.println("in readAll");
+System.err.println("service = " + service);
+        if (offset == null) offset = 0;
+        if (max == null) max = 0;
+
         return service.getAll(offset, max);
     }
 
     @GET
     @Path("/{id}")
-    T read(@PathParam("id") long id) {
+    public T read(@PathParam("id") Id id) {
         return service.getById(id);
     }
 
     @PUT
     @Path("/{id}")
-    T update(@PathParam("id") long id, T entity) {
+    public T update(@PathParam("id") Id id, T entity) {
         return service.updateById(id, entity);
     }
 
     @DELETE
     @Path("/{id}")
-    void delete(@PathParam("id") long id) {
+    public void delete(@PathParam("id") Id id) {
         service.deleteById(id);
     }
 }

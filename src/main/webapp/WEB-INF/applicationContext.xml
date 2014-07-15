@@ -7,5 +7,7 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-        <context:component-scan base-package="org.ozoneplatform.rest" />
+        <context:component-scan base-package="org.ozoneplatform" />
+
+        <bean class="com.fasterxml.jackson.databind.ObjectMapper" id="objectMapper" />
 </beans>

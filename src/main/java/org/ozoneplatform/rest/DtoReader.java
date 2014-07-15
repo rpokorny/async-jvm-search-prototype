@@ -6,6 +6,8 @@ import java.lang.annotation.Annotation;
 import java.io.InputStream;
 import java.io.IOException;
 
+import javax.ws.rs.Consumes;
+
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -21,6 +23,7 @@ import org.ozoneplatform.dto.InDto;
 import org.ozoneplatform.dto.HasInDto;
 
 @Provider
+//@Consumes("application/vnd.ozp.store.listing.in")
 public class DtoReader implements MessageBodyReader<HasInDto> {
     @Autowired private InDtoContentTypeRegistry inDtoContentTypeRegistry;
 
@@ -29,7 +32,16 @@ public class DtoReader implements MessageBodyReader<HasInDto> {
     @Override
     public boolean isReadable(Class<?> type, Type genericType,
             Annotation[] annotations, MediaType mediaType) {
-        return getFactory(type, mediaType) != null;
+
+        Class<? extends HasInDto> subclass;
+        try {
+            subclass = type.asSubclass(HasInDto.class);
+        }
+        catch (ClassCastException e) {
+            return false;
+        }
+
+        return getFactory(subclass, mediaType) != null;
     }
 
     @Override
@@ -48,7 +60,20 @@ public class DtoReader implements MessageBodyReader<HasInDto> {
     }
 
     @SuppressWarnings("unchecked")
-    private InDtoFactory<?,?> getFactory(Class<?> type, MediaType mediaType) {
+    private InDtoFactory<?,?> getFactory(Class<? extends HasInDto> type, MediaType mediaType) {
+        if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+            try {
+                mediaType = type.newInstance().getDefaultInContentType();
+System.err.println("switching to media type " + mediaType);
+            }
+            catch (InstantiationException e1) {
+                throw new RuntimeException(e1);
+            }
+            catch (IllegalAccessException e2) {
+                throw new RuntimeException(e2);
+            }
+        }
+
         return inDtoContentTypeRegistry.getInDtoFactory((Class<? extends HasInDto>)type,
                 mediaType);
     }

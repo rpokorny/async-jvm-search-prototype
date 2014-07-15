@@ -1,3 +1,7 @@
 package org.ozoneplatform.dto;
 
-public interface HasOutDto {}
+import javax.ws.rs.core.MediaType;
+
+public interface HasOutDto {
+    MediaType getDefaultOutContentType();
+}

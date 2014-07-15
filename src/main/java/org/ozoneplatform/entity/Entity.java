@@ -1,5 +1,13 @@
 package org.ozoneplatform.entity;
 
 public abstract class Entity {
-    abstract public long getId();
+    private Id id;
+
+    public Id getId() {
+        return id;
+    }
+
+    public void setId(Id id) {
+        this.id = id;
+    }
 }
