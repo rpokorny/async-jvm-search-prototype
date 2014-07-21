@@ -1,6 +1,9 @@
 package org.ozoneplatform.rest;
 
+import java.util.Collection;
+
 import java.lang.reflect.Type;
+import java.lang.reflect.ParameterizedType;
 import java.lang.annotation.Annotation;
 
 import java.io.OutputStream;
@@ -27,14 +30,7 @@ public class DtoWriter implements MessageBodyWriter<DtoFactory<?>> {
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
             Annotation[] annotations, MediaType mediaType) {
-        //not much we can do here without the factory instance...
-        try {
-            type.asSubclass(DtoFactory.class);
-            return true;
-        }
-        catch (ClassCastException e) {
-            return false;
-        }
+        return DtoFactory.class.isAssignableFrom(type);
     }
 
     //This method is deprecated and unused in JAX-RS 2

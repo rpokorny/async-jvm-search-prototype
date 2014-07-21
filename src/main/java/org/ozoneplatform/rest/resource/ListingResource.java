@@ -19,6 +19,7 @@ import org.ozoneplatform.entity.Listing;
 import org.ozoneplatform.entity.Id;
 
 import org.ozoneplatform.dto.DtoFactory;
+import org.ozoneplatform.dto.DtoFactoryFactory;
 
 import org.ozoneplatform.service.ListingService;
 
@@ -26,14 +27,15 @@ import org.ozoneplatform.service.ListingService;
 @Component
 public class ListingResource extends AbstractEntityResource<Listing> {
     @Autowired
-    public ListingResource(ListingService service) {
+    public ListingResource(DtoFactoryFactory dtoFactoryFactory, ListingService service) {
 System.err.println("!!!!!!!!!!!! service = " + service);
         this.service = service;
+        this.dtoFactoryFactory = dtoFactoryFactory;
     }
 
     @GET
     @Override
-    @Produces("application/vnd.ozp.store.listings")
+    @Produces({"application/vnd.ozp.store.listings+json", "application/json"})
     public Collection<DtoFactory<Listing>> readAll(@QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
         return super.readAll(offset, max);
@@ -42,7 +44,7 @@ System.err.println("!!!!!!!!!!!! service = " + service);
     @GET
     @Override
     @Path("/{id}")
-    @Produces("application/vnd.ozp.store.listing")
+    @Produces({"application/vnd.ozp.store.listing+json", "application/json"})
     public DtoFactory<Listing> read(@PathParam("id") Id id) {
 System.err.println("in read for id " + id);
         return super.read(id);
