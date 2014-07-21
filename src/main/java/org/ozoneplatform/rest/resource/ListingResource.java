@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.ozoneplatform.entity.Listing;
 import org.ozoneplatform.entity.Id;
 
-import org.ozoneplatform.service.ListingService;
+import org.ozoneplatform.dto.DtoFactory;
 
-import org.ozoneplatform.dto.ListingFullOutDtoFactory;
+import org.ozoneplatform.service.ListingService;
 
 @Path("listing")
 @Component
@@ -34,7 +34,7 @@ System.err.println("!!!!!!!!!!!! service = " + service);
     @GET
     @Override
     @Produces("application/vnd.ozp.store.listings")
-    public Collection<Listing> readAll(@QueryParam("offset") Integer offset,
+    public Collection<DtoFactory<Listing>> readAll(@QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
         return super.readAll(offset, max);
     }
@@ -43,8 +43,8 @@ System.err.println("!!!!!!!!!!!! service = " + service);
     @Override
     @Path("/{id}")
     @Produces("application/vnd.ozp.store.listing")
-    public Listing read(@PathParam("id") Id id) {
+    public DtoFactory<Listing> read(@PathParam("id") Id id) {
 System.err.println("in read for id " + id);
-        return service.getById(id);
+        return super.read(id);
     }
 }

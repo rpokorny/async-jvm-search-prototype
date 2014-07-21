@@ -19,9 +19,9 @@ import javax.ws.rs.core.UriBuilder;
 import org.ozoneplatform.service.AbstractEntityService;
 import org.ozoneplatform.entity.Entity;
 import org.ozoneplatform.entity.Id;
-import org.ozoneplatform.dto.OutDtoFactory;
-import org.ozoneplatform.dto.OutDto;
-import org.ozoneplatform.dto.InDto;
+
+import org.ozoneplatform.dto.DtoFactory;
+import org.ozoneplatform.dto.DtoFactoryFactory;
 
 /**
  * Parent class of jaxrs rest controllers, containing
@@ -30,14 +30,19 @@ import org.ozoneplatform.dto.InDto;
 public abstract class AbstractEntityResource<T extends Entity> {
 
     protected AbstractEntityService<T> service;
+    protected DtoFactoryFactory dtoFactoryFactory;
 
     @POST
-    public Response create(T entity) {
+    public Response create(DtoFactory<T> dtoFactory) {
 System.err.println("creating");
-        T created = service.create(entity);
+        T created = service.create(dtoFactory.getInstance());
         URI uri = UriBuilder.fromResource(this.getClass()).path(created.getId().toString())
             .build();
-        return Response.created(uri).entity(created).build();
+
+        return Response
+            .created(uri)
+            .entity(dtoFactoryFactory.createDtoFactory(created))
+            .build();
     }
 
     /**
@@ -45,26 +50,27 @@ System.err.println("creating");
      * with paging parameters to limit the size of the return
      */
     @GET
-    public Collection<T> readAll(@QueryParam("offset") Integer offset,
+    public Collection<DtoFactory<T>> readAll(@QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
 System.err.println("in readAll");
 System.err.println("service = " + service);
         if (offset == null) offset = 0;
         if (max == null) max = 0;
 
-        return service.getAll(offset, max);
+        return dtoFactoryFactory.createDtoFactoryCollection(service.getAll(offset, max));
     }
 
     @GET
     @Path("/{id}")
-    public T read(@PathParam("id") Id id) {
-        return service.getById(id);
+    public DtoFactory<T> read(@PathParam("id") Id id) {
+        return dtoFactoryFactory.createDtoFactory(service.getById(id));
     }
 
     @PUT
     @Path("/{id}")
-    public T update(@PathParam("id") Id id, T entity) {
-        return service.updateById(id, entity);
+    public DtoFactory<T> update(@PathParam("id") Id id, DtoFactory<T> dtoFactory) {
+        return dtoFactoryFactory.createDtoFactory(service.updateById(id,
+                    dtoFactory.getInstance()));
     }
 
     @DELETE

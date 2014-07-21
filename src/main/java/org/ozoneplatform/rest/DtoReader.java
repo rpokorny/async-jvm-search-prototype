@@ -17,65 +17,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.ozoneplatform.dto.InDtoContentTypeRegistry;
-import org.ozoneplatform.dto.InDtoFactory;
-import org.ozoneplatform.dto.InDto;
-import org.ozoneplatform.dto.HasInDto;
+import org.ozoneplatform.dto.DtoFactory;
 
 @Provider
-//@Consumes("application/vnd.ozp.store.listing.in")
-public class DtoReader implements MessageBodyReader<HasInDto> {
-    @Autowired private InDtoContentTypeRegistry inDtoContentTypeRegistry;
-
+public class DtoReader implements MessageBodyReader<DtoFactory<?>> {
     @Autowired private ObjectMapper objectMapper;
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType,
             Annotation[] annotations, MediaType mediaType) {
-
-        Class<? extends HasInDto> subclass;
         try {
-            subclass = type.asSubclass(HasInDto.class);
+            type.asSubclass(DtoFactory.class);
+            return true;
         }
         catch (ClassCastException e) {
             return false;
         }
-
-        return getFactory(subclass, mediaType) != null;
     }
 
     @Override
     //JAX-RS's underspecified type signatures prevent a fully type-safe way of implementing this
-    @SuppressWarnings({"unchecked"})
-    public HasInDto readFrom(Class<HasInDto> type, Type genericType,
+    @SuppressWarnings("unchecked")
+    public DtoFactory<?> readFrom(Class<DtoFactory<?>> type, Type genericType,
             Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String,String> httpHeaders, InputStream entityStream)
             throws IOException {
-
-        InDtoFactory<?, ? extends InDto<? extends HasInDto>> factory =
-            (InDtoFactory<?, ? extends InDto<? extends HasInDto>>)getFactory(type, mediaType);
-
-        InDto<? extends HasInDto> dto = objectMapper.readValue(entityStream, factory.getDtoType());
-        return dto.fromDto();
-    }
-
-    @SuppressWarnings("unchecked")
-    private InDtoFactory<?,?> getFactory(Class<? extends HasInDto> type, MediaType mediaType) {
-        if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
-            try {
-                mediaType = type.newInstance().getDefaultInContentType();
-System.err.println("switching to media type " + mediaType);
-            }
-            catch (InstantiationException e1) {
-                throw new RuntimeException(e1);
-            }
-            catch (IllegalAccessException e2) {
-                throw new RuntimeException(e2);
-            }
-        }
-
-        return inDtoContentTypeRegistry.getInDtoFactory((Class<? extends HasInDto>)type,
-                mediaType);
+        return objectMapper.readValue(entityStream, type);
     }
 }
-

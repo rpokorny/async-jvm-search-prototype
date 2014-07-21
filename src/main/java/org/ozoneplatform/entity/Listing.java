@@ -2,17 +2,10 @@ package org.ozoneplatform.entity;
 
 import java.util.Collection;
 
-import javax.ws.rs.core.MediaType;
-
-import org.ozoneplatform.dto.HasOutDto;
-import org.ozoneplatform.dto.HasInDto;
-import org.ozoneplatform.dto.ListingFullOutDtoFactory;
-import org.ozoneplatform.dto.ListingInDtoFactory;
-
 /**
  * A listing in the Store
  */
-public class Listing extends Entity implements HasOutDto, HasInDto {
+public class Listing extends Entity {
     private String title;
     private Collection<Intent> intents;
 
@@ -21,7 +14,4 @@ public class Listing extends Entity implements HasOutDto, HasInDto {
 
     public void setTitle(String title) { this.title = title; }
     public void setIntents(Collection<Intent> intents) { this.intents = intents; }
-
-    public MediaType getDefaultOutContentType() { return ListingFullOutDtoFactory.CONTENT_TYPE; }
-    public MediaType getDefaultInContentType() { return ListingInDtoFactory.CONTENT_TYPE; }
 }
