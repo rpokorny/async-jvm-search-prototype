@@ -1,4 +1,4 @@
-package org.ozoneplatform.rest;
+package org.ozoneplatform.rest.resource;
 
 import java.util.Collection;
 

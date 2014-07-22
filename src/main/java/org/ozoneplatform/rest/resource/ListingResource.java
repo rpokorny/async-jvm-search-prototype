@@ -1,4 +1,4 @@
-package org.ozoneplatform.rest;
+package org.ozoneplatform.rest.resource;
 
 import java.util.Collection;
 
@@ -34,7 +34,11 @@ public class ListingResource extends AbstractEntityResource<Listing> {
 
     @GET
     @Override
-    @Produces({"application/vnd.ozp.store.listings+json", "application/json"})
+    @Produces({
+        "application/vnd.ozp.store.listings+json",
+        "application/vnd.ozp.store.listing.simples+json",
+        "application/json"
+    })
     public Collection<DtoFactory<Listing>> readAll(@QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
         return super.readAll(offset, max);
@@ -43,7 +47,11 @@ public class ListingResource extends AbstractEntityResource<Listing> {
     @GET
     @Override
     @Path("/{id}")
-    @Produces({"application/vnd.ozp.store.listing+json", "application/json"})
+    @Produces({
+        "application/vnd.ozp.store.listing+json",
+        "application/vnd.ozp.store.listing.simple+json",
+        "application/json"
+    })
     public DtoFactory<Listing> read(@PathParam("id") Id id) {
         return super.read(id);
     }
