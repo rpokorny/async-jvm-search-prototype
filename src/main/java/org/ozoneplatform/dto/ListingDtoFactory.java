@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ozoneplatform.entity.Listing;
 import org.ozoneplatform.entity.Intent;
 
+import org.ozoneplatform.rest.resource.ListingResource;
+
 import static org.ozoneplatform.dto.IntentDtoFactory.IntentDto;
 
 class ListingDtoFactory extends DtoFactory<Listing> {
@@ -57,18 +59,16 @@ class ListingDtoFactory extends DtoFactory<Listing> {
         else return super.getOutDtoForMediaType(mediaType);
     }
 
-    static class ListingFullOutDto extends AbstractEntityDto<Listing> {
+    static class ListingFullOutDto extends ListingSimpleOutDto {
         static final MediaType MEDIA_TYPE =
             new MediaType("application", "vnd.ozp.store.listing+json");
 
         private Collection<DtoFactory<Intent>> intentDtoFactories;
 
         ListingFullOutDto(Listing listing, Collection<DtoFactory<Intent>> intentDtoFactories) {
-            this.entity = listing;
+            super(listing);
             this.intentDtoFactories = intentDtoFactories;
         }
-
-        public String getTitle() { return entity.getTitle(); }
 
         public Collection<OutDto<Intent>> getIntents() {
             Collection<OutDto<Intent>> retval =
@@ -87,7 +87,19 @@ class ListingDtoFactory extends DtoFactory<Listing> {
             new MediaType("application", "vnd.ozp.store.listing.simple+json");
 
         ListingSimpleOutDto(Listing listing) {
-            this.entity = listing;
+            super(listing);
+            this.addLink("self", new EntityHrefDto<Listing>(listing, ListingResource.class));
+        }
+
+        public String getTitle() { return entity.getTitle(); }
+    }
+
+    static class ListingHrefDto extends EntityHrefDto<Listing> {
+        static final MediaType MEDIA_TYPE =
+            new MediaType("application", "vnd.ozp.store.listing.href+json");
+
+        public ListingHrefDto(Listing entity) {
+            super(entity, ListingResource.class);
         }
 
         public String getTitle() { return entity.getTitle(); }

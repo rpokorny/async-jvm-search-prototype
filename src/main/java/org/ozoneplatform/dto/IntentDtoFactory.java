@@ -49,7 +49,7 @@ class IntentDtoFactory extends DtoFactory<Intent> {
             new MediaType("application", "vnd.ozp.store.intent+json");
 
         IntentDto(Intent intent) {
-            this.entity = intent;
+            super(intent);
         }
 
         public boolean getSend() { return entity.getSend(); }
