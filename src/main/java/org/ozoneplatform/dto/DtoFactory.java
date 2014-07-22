@@ -1,19 +1,30 @@
 package org.ozoneplatform.dto;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import org.ozoneplatform.exception.InvalidContentTypeException;
 
 /**
  * A factory for creating DTOs from a particular encapsulated Entity (or other object).
- * In addition to the methods here, a concrete implementation of this class must implement a
- * constructor or static method annotated with as a Jackson JsonCreator (Java has no way to
- * formally specify this requirement)
  */
 public abstract class DtoFactory<T> {
-    protected DtoFactoryFactory dtoFactoryFactory;
+    protected final DtoFactoryFactory dtoFactoryFactory;
 
-    protected T instance;
+    protected final T instance;
+
+    /**
+     * A URI builder currently configured with an absolute URI
+     * to the base of the REST API
+     */
+    protected final UriBuilder halUriBuilder;
+
+    public DtoFactory(T instance, DtoFactoryFactory dtoFactoryFactory,
+            UriBuilder halUriBuilder) {
+        this.dtoFactoryFactory = dtoFactoryFactory;
+        this.instance = instance;
+        this.halUriBuilder = halUriBuilder;
+    }
 
     public abstract Class<T> getDataType();
     public OutDto<T> getOutDtoForMediaType(MediaType mediaType) throws InvalidContentTypeException {
@@ -27,9 +38,5 @@ public abstract class DtoFactory<T> {
 
     public OutDto<T> getDto() {
         return getOutDtoForMediaType(getPrimaryMediaType());
-    }
-
-    public T getInstance() {
-        return instance;
     }
 }

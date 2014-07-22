@@ -3,6 +3,8 @@ package org.ozoneplatform.dto;
 import java.util.Collection;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.springframework.stereotype.Component;
 
 import org.ozoneplatform.entity.Listing;
@@ -15,38 +17,37 @@ import org.ozoneplatform.entity.Listing;
 public class DtoFactoryFactory {
 
     @SuppressWarnings("unchecked")
-    public <T> DtoFactory<T> createDtoFactory(T object) {
+    public <T> DtoFactory<T> createDtoFactory(T object, UriBuilder halUriBuilder) {
         Class<?> clazz = object.getClass();
 
         if (clazz == Listing.class)
-            return (DtoFactory<T>)createListingDtoFactory((Listing)object);
+            return (DtoFactory<T>)createListingDtoFactory((Listing)object, halUriBuilder);
         else
             throw new IllegalArgumentException("Cannot create DtoFactory for unrecognized " +
                 "class " + clazz);
     }
 
-    public <T> Collection<DtoFactory<T>> createDtoFactoryCollection(Collection<T> objects) {
+    public <T> Collection<DtoFactory<T>> createDtoFactoryCollection(Collection<T> objects,
+            UriBuilder halUriBuilder) {
         Collection<DtoFactory<T>> retval = new ArrayList<DtoFactory<T>>(objects.size());
 
         for(T object : objects) {
-            retval.add(createDtoFactory(object));
+            retval.add(createDtoFactory(object, halUriBuilder));
         }
 
         return retval;
     }
 
-    //TODO remove some of the redundancy from this class.  There should be a way to
-    //consolidate the if statement in this method and the one in createDtoFactory
     @SuppressWarnings("unchecked")
-    public <T> Class<? extends DtoFactory<T>> getDtoFactoryClass(Class<T> entityType) {
+    public <T> Class<? extends InDto<T>> getInDtoClass(Class<T> entityType) {
         if (entityType == Listing.class)
-            return (Class<? extends DtoFactory<T>>)ListingDtoFactory.class
-                .asSubclass(DtoFactory.class);
+            return (Class<? extends InDto<T>>)ListingInDto.class
+                .asSubclass(InDto.class);
         else
             throw new IllegalArgumentException("No DtoFactory for class " + entityType);
     }
 
-    private DtoFactory<Listing> createListingDtoFactory(Listing object) {
-        return new ListingDtoFactory(this, object);
+    private DtoFactory<Listing> createListingDtoFactory(Listing object, UriBuilder halUriBuilder) {
+        return new ListingDtoFactory(object, this, halUriBuilder);
     }
 }

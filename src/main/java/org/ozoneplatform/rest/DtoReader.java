@@ -19,22 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JavaType;
 
-import org.ozoneplatform.dto.DtoFactory;
+import org.ozoneplatform.dto.InDto;
 import org.ozoneplatform.dto.DtoFactoryFactory;
 
 @Provider
-public class DtoReader implements MessageBodyReader<DtoFactory<?>> {
+public class DtoReader implements MessageBodyReader<InDto<?>> {
     @Autowired private ObjectMapper objectMapper;
     @Autowired private DtoFactoryFactory dtoFactoryFactory;
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType,
             Annotation[] annotations, MediaType mediaType) {
-        return DtoFactory.class.isAssignableFrom(type);
+        return InDto.class.isAssignableFrom(type);
     }
 
     @Override
-    public DtoFactory<?> readFrom(Class<DtoFactory<?>> type, Type genericType,
+    public InDto<?> readFrom(Class<InDto<?>> type, Type genericType,
             Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String,String> httpHeaders, InputStream entityStream)
             throws IOException {
@@ -42,6 +42,6 @@ public class DtoReader implements MessageBodyReader<DtoFactory<?>> {
         Class<?> entityType = (Class<?>)factoryType.getActualTypeArguments()[0];
 
         return objectMapper.readValue(entityStream,
-                dtoFactoryFactory.getDtoFactoryClass(entityType));
+                dtoFactoryFactory.getInDtoClass(entityType));
     }
 }

@@ -10,10 +10,11 @@ public class EntityHrefDto<T extends Entity> extends HrefDto implements OutDto<T
     /**
      * @param entity The entity referenced by this Href
      * @param resourceClass The JAX-RS resource class responsible for this entity
+     * @param halUriBuilder A URI builder currently configured with an absolute URI
+     * to the base of the REST API
      */
-    public EntityHrefDto(T entity, Class<?> resourceClass) {
-        super(UriBuilder.fromResource(resourceClass)
-            .path(entity.getId().toString()).build());
+    public EntityHrefDto(T entity, Class<?> resourceClass, UriBuilder halUriBuilder) {
+        super(halUriBuilder.path(resourceClass).path(entity.getId().toString()).build());
 
         this.entity = entity;
     }

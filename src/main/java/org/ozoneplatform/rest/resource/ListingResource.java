@@ -11,6 +11,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.PathParam;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +41,10 @@ public class ListingResource extends AbstractEntityResource<Listing> {
         "application/vnd.ozp.store.listing.simples+json",
         "application/json"
     })
-    public Collection<DtoFactory<Listing>> readAll(@QueryParam("offset") Integer offset,
+    public Collection<DtoFactory<Listing>> readAll(@Context UriInfo uriInfo,
+            @QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
-        return super.readAll(offset, max);
+        return super.readAll(uriInfo, offset, max);
     }
 
     @GET
@@ -52,7 +55,7 @@ public class ListingResource extends AbstractEntityResource<Listing> {
         "application/vnd.ozp.store.listing.simple+json",
         "application/json"
     })
-    public DtoFactory<Listing> read(@PathParam("id") Id id) {
-        return super.read(id);
+    public DtoFactory<Listing> read(@Context UriInfo uriInfo, @PathParam("id") Id id) {
+        return super.read(uriInfo, id);
     }
 }
