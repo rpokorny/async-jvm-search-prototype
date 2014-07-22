@@ -13,13 +13,13 @@ import org.ozoneplatform.service.ListingService;
 @Path("listing")
 @Component
 @Produces({
-    "application/vnd.ozp.store.listing+json",
-    "application/vnd.ozp.store.listing.simple+json",
+    "application/vnd.ozp.store.listings+json",
+    "application/vnd.ozp.store.listing.simples+json",
     "application/json"
 })
-public class ListingResource extends AbstractEntityResource<Listing> {
+public class ListingsResource extends AbstractEntitiesResource<Listing> {
     @Autowired
-    public ListingResource(ListingService service) {
+    public ListingsResource(ListingService service) {
         this.service = service;
     }
 }

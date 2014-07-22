@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.ozoneplatform.service.AbstractEntityService;
 import org.ozoneplatform.entity.Entity;
 import org.ozoneplatform.entity.Id;
@@ -27,13 +29,13 @@ import org.ozoneplatform.dto.DtoFactoryFactory;
 import org.ozoneplatform.dto.InDto;
 
 /**
- * Parent class of jaxrs rest controllers, containing
- * basic CRUD functionality
+ * Parent class of jaxrs rest resources, containing
+ * basic CRUD functionality.  See also AbstractEntitiesResource
  */
 public abstract class AbstractEntityResource<T extends Entity> {
 
     protected AbstractEntityService<T> service;
-    protected DtoFactoryFactory dtoFactoryFactory;
+    @Autowired protected DtoFactoryFactory dtoFactoryFactory;
 
     @POST
     public Response create(@Context UriInfo uriInfo, InDto<T> dto) {
@@ -45,21 +47,6 @@ public abstract class AbstractEntityResource<T extends Entity> {
             .created(uri)
             .entity(dtoFactoryFactory.createDtoFactory(created, uriInfo.getBaseUriBuilder()))
             .build();
-    }
-
-    /**
-     * GET all of the domain objects of type T, optionally
-     * with paging parameters to limit the size of the return
-     */
-    @GET
-    public Collection<DtoFactory<T>> readAll(@Context UriInfo uriInfo,
-            @QueryParam("offset") Integer offset,
-            @QueryParam("max") Integer max) {
-        if (offset == null) offset = 0;
-        if (max == null) max = 0;
-
-        return dtoFactoryFactory.createDtoFactoryCollection(service.getAll(offset, max),
-                uriInfo.getBaseUriBuilder());
     }
 
     @GET
