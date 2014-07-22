@@ -34,7 +34,6 @@ public abstract class AbstractEntityResource<T extends Entity> {
 
     @POST
     public Response create(DtoFactory<T> dtoFactory) {
-System.err.println("creating");
         T created = service.create(dtoFactory.getInstance());
         URI uri = UriBuilder.fromResource(this.getClass()).path(created.getId().toString())
             .build();
@@ -52,8 +51,6 @@ System.err.println("creating");
     @GET
     public Collection<DtoFactory<T>> readAll(@QueryParam("offset") Integer offset,
             @QueryParam("max") Integer max) {
-System.err.println("in readAll");
-System.err.println("service = " + service);
         if (offset == null) offset = 0;
         if (max == null) max = 0;
 

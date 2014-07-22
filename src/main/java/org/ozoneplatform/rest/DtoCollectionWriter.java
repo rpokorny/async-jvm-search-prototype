@@ -37,11 +37,8 @@ public class DtoCollectionWriter implements MessageBodyWriter<Collection<DtoFact
     @Override
     public boolean isWriteable(Class<?> type, Type genericType,
             Annotation[] annotations, MediaType mediaType) {
-System.err.println("DtoCollectionWriter isWriteable - type = " + type);
         if (Collection.class.isAssignableFrom(type)) {
-System.err.println("Collection isAssignableFrom");
             Type[] typeParams = ((ParameterizedType)genericType).getActualTypeArguments();
-System.err.println("typeParams = " + Arrays.toString(typeParams));
 
             Type toTest = typeParams[0];
             if (toTest instanceof ParameterizedType) {
@@ -49,10 +46,8 @@ System.err.println("typeParams = " + Arrays.toString(typeParams));
             }
 
 try {
-System.err.println("returning " + DtoFactory.class.isAssignableFrom((Class)toTest));
 }
 catch (Exception e) {
-System.err.println("caught exception " + e);
 }
             return DtoFactory.class.isAssignableFrom((Class)toTest);
         }
@@ -73,7 +68,6 @@ System.err.println("caught exception " + e);
             Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String,Object> httpHeaders, OutputStream entityStream)
             throws IOException {
-System.err.println("DtoCollectionWriter writeTo");
         Collection<OutDto<?>> dtoCollection =
             new ArrayList<OutDto<?>>(collection.size());
 
@@ -99,7 +93,6 @@ System.err.println("DtoCollectionWriter writeTo");
         String collectionSubType = collectionMediaType.getSubtype();
         String baseSubType;
 
-System.err.println("collectionSubType = " + collectionSubType);
         Matcher matcher = MEDIA_TYPE_PATTERN.matcher(collectionSubType);
         matcher.find();
         if (matcher.group(2) != null) {
@@ -110,7 +103,6 @@ System.err.println("collectionSubType = " + collectionSubType);
         }
 
 
-System.err.println("baseSubType = " + baseSubType);
         return new MediaType(type, baseSubType);
     }
 }

@@ -28,7 +28,6 @@ import org.ozoneplatform.service.ListingService;
 public class ListingResource extends AbstractEntityResource<Listing> {
     @Autowired
     public ListingResource(DtoFactoryFactory dtoFactoryFactory, ListingService service) {
-System.err.println("!!!!!!!!!!!! service = " + service);
         this.service = service;
         this.dtoFactoryFactory = dtoFactoryFactory;
     }
@@ -46,7 +45,6 @@ System.err.println("!!!!!!!!!!!! service = " + service);
     @Path("/{id}")
     @Produces({"application/vnd.ozp.store.listing+json", "application/json"})
     public DtoFactory<Listing> read(@PathParam("id") Id id) {
-System.err.println("in read for id " + id);
         return super.read(id);
     }
 }
