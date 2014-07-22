@@ -1,5 +1,5 @@
 package org.ozoneplatform.dto;
 
-public interface InDto<T> extends Dto<T> {
+public interface InDto<T> {
     T fromDto();
 }
