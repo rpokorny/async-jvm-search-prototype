@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.ozoneplatform.service.AbstractEntityService;
 import org.ozoneplatform.entity.Entity;
 import org.ozoneplatform.entity.Id;
@@ -34,7 +36,7 @@ import org.ozoneplatform.dto.InDto;
 public abstract class AbstractEntitiesResource<T extends Entity> {
 
     protected AbstractEntityService<T> service;
-    protected DtoFactoryFactory dtoFactoryFactory;
+    @Autowired protected DtoFactoryFactory dtoFactoryFactory;
 
     /**
      * GET all of the domain objects of type T, optionally
