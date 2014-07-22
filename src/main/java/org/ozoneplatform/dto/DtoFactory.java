@@ -17,7 +17,7 @@ public abstract class DtoFactory<T> {
 
     public abstract Class<T> getDataType();
     public OutDto<T> getOutDtoForMediaType(MediaType mediaType) throws InvalidContentTypeException {
-        if (mediaType == MediaType.APPLICATION_JSON_TYPE) {
+        if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
             return getDto();
         }
         else throw new InvalidContentTypeException(mediaType);

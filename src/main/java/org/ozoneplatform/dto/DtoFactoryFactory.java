@@ -20,7 +20,8 @@ public class DtoFactoryFactory {
 
         if (clazz == Listing.class)
             return (DtoFactory<T>)createListingDtoFactory((Listing)object);
-        else throw new IllegalArgumentException("Cannot create DtoFactory for unrecognized " +
+        else
+            throw new IllegalArgumentException("Cannot create DtoFactory for unrecognized " +
                 "class " + clazz);
     }
 
@@ -32,6 +33,17 @@ public class DtoFactoryFactory {
         }
 
         return retval;
+    }
+
+    //TODO remove some of the redundancy from this class.  There should be a way to
+    //consolidate the if statement in this method and the one in createDtoFactory
+    @SuppressWarnings("unchecked")
+    public <T> Class<? extends DtoFactory<T>> getDtoFactoryClass(Class<T> entityType) {
+        if (entityType == Listing.class)
+            return (Class<? extends DtoFactory<T>>)ListingDtoFactory.class
+                .asSubclass(DtoFactory.class);
+        else
+            throw new IllegalArgumentException("No DtoFactory for class " + entityType);
     }
 
     private DtoFactory<Listing> createListingDtoFactory(Listing object) {

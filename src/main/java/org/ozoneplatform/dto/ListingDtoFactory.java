@@ -31,13 +31,13 @@ class ListingDtoFactory extends DtoFactory<Listing> {
         this.instance = new Listing();
         this.instance.setTitle(title);
 
-        intentDtoFactories = intentFactories;
-        Collection<Intent> intents = new ArrayList<Intent>(intentDtoFactories.size());
-        for (DtoFactory<Intent> intentFactory : intentDtoFactories) {
-            intents.add(intentFactory.getInstance());
-        }
+        if (intentDtoFactories != null) {
+            Collection<Intent> intents = new ArrayList<Intent>(intentDtoFactories.size());
 
-        this.instance.setIntents(intents);
+            for (DtoFactory<Intent> intentFactory : intentDtoFactories) {
+                this.instance.getIntents().add(intentFactory.getInstance());
+            }
+        }
     }
 
     @Override
