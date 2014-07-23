@@ -1,2 +1,7 @@
 /target
 **/.*.swp
+
+# hsqldb
+jaxrs-dtos-test.log
+jaxrs-dtos-test.properties
+jaxrs-dtos-test.script
