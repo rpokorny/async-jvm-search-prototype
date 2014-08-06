@@ -1,0 +1,5 @@
+# Elasticsearch client settings
+cluster.name=elasticsearch
+
+#Do not store data on the local node
+node.client=true
