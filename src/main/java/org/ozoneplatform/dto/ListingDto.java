@@ -5,8 +5,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.ozoneplatform.entity.Listing;
 
-import org.ozoneplatform.rest.resource.ListingResource;
-
 /**
  * Extends the ListingInDto to include HAL links for use as an output DTO
  */
@@ -16,7 +14,7 @@ class ListingDto extends ListingInDto implements InDto<Listing> {
 
     ListingDto(Listing listing, UriBuilder halUriBuilder) {
         super(listing);
-        this.addLink("self",
-            new EntityHrefDto<Listing>(listing, ListingResource.class, halUriBuilder));
+        //this.addLink("self",
+            //new EntityHrefDto<Listing>(listing, ListingResource.class, halUriBuilder));
     }
 }

@@ -5,16 +5,14 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.ozoneplatform.entity.Listing;
 
-import org.ozoneplatform.rest.resource.ListingResource;
-
 class ListingSimpleOutDto extends AbstractEntityDto<Listing> {
     static final MediaType MEDIA_TYPE =
         new MediaType("application", "vnd.ozp.store.listing.simple+json");
 
     ListingSimpleOutDto(Listing listing, UriBuilder halUriBuilder) {
         super(listing);
-        this.addLink("self",
-            new EntityHrefDto<Listing>(listing, ListingResource.class, halUriBuilder));
+        //this.addLink("self",
+            //new EntityHrefDto<Listing>(listing, ListingResource.class, halUriBuilder));
     }
 
     public String getTitle() { return entity.getTitle(); }
